@@ -17,6 +17,6 @@ deploy-ke-server-testing:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SERVER_HOSTNAME" > ~/.ssh/known_hosts'
   script:
-    - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'php $ROOT_DIR/artisan down'
+    # - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan down'
     - rsync -avz /builds/agung3wi/laravel-gitlab-ci/ $USERNAME_SERVER@$SERVER_HOSTNAME:$ROOT_DIR/ --exclude=storage/*.key --exclude=.env
     # - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan up'
