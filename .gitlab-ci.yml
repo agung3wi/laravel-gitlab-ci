@@ -1,0 +1,22 @@
+dependency:
+  image: composer
+  stage: build
+  script:
+    - composer install
+  artifacts:
+    paths:
+      - /builds/agung3wi/laravel-gitlab-ci
+
+deploy-ke-server-testing:
+  stage: deploy
+  image: debian:latest
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y && apt-get install rsync -y  )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SERVER_HOSTNAME" > ~/.ssh/known_hosts'
+  script:
+    - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan down'
+    - rsync -avz /builds/agung3wi/laravel-gitlab-ci/ $USERNAME_SERVER@$SERVER_HOSTNAME:$ROOT_DIR/ --exclude=storage/*.key --exclude=.env
+    - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan up'
