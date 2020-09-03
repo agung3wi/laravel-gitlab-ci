@@ -18,5 +18,6 @@ deploy-ke-server-testing:
     - '[[ -f /.dockerenv ]] && ssh-keyscan -H "$SERVER_HOSTNAME" > ~/.ssh/known_hosts'
   script:
     # - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan down'
+    - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd /home/pttas/sites/laravelci-staging.pttas.xyz && php artisan migrate'
     - rsync -avz /builds/agung3wi/laravel-gitlab-ci/ $USERNAME_SERVER@$SERVER_HOSTNAME:/home/pttas/sites/laravelci-staging.pttas.xyz/ --exclude=storage/*.key --exclude=.env
     # - ssh $USERNAME_SERVER@$SERVER_HOSTNAME 'cd $ROOT_DIR && php artisan up'
