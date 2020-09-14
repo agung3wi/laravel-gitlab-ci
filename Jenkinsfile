@@ -1,5 +1,14 @@
 node {
     checkout scm
+
+    // composer install
+    docker.image('composer').inside('-u root') {
+        sshagent (credentials: ['ssh-pttas-server-lokal']) {
+            sh 'composer install'
+        }
+    }
+
+    // upload ke server
     docker.image('agung3wi/alpine-rsync:1.1').inside('-u root') {
         sshagent (credentials: ['ssh-pttas-server-lokal']) {
             sh 'mkdir -p ~/.ssh'
